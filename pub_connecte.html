@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pub&Connecté - La Régie Publicitaire Connectée</title>
+    <meta name="description" content="Première plateforme mondiale de gestion unifiée des publicités physiques et digitales. Pilotez vos campagnes à distance en temps réel.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --dark-navy: #001F3F;
+            --primary: #0050A8;
+            --accent: #00BFFF;
+            --accent-glow: rgba(0, 191, 255, 0.5);
+            --white: #FFFFFF;
+            --light-blue: #E6F4FF;
+            --dark-blue: #003366;
+            --text-gray: #B8D4E8;
+            --gradient-1: linear-gradient(135deg, #001F3F 0%, #003366 50%, #0050A8 100%);
+            --gradient-2: linear-gradient(180deg, rgba(0,191,255,0.1) 0%, transparent 100%);
+            --font-display: 'Orbitron', sans-serif;
+            --font-heading: 'Rajdhani', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--dark-navy);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 191, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 80, 168, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 191, 255, 0.05) 0%, transparent 30%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, -5%) rotate(1deg); }
+            50% { transform: translate(5%, 5%) rotate(-1deg); }
+            75% { transform: translate(-3%, 3%) rotate(0.5deg); }
+        }
+
+        /* Grid Lines Effect */
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(0, 191, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 191, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 31, 63, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.7rem 5%;
+            background: rgba(0, 31, 63, 0.98);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .nav-brand {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .nav-brand span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-weight: 500;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            padding: 0.7rem 1.5rem;
+            background: var(--accent);
+            color: var(--dark-navy);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-cta:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 5% 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+            z-index: 10;
+        }
+
+        .hero-logo {
+            width: 200px;
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px var(--accent-glow));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 191, 255, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { box-shadow: 0 0 20px 5px var(--accent-glow); }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--white) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-heading);
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--dark-navy);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--white);
+            border-color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-20px); }
+            60% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 5%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* Concept Section */
+        .concept {
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 80, 168, 0.1) 50%, transparent 100%);
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .concept-card p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--white);
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .concept-item {
+            background: rgba(0, 31, 63, 0.8);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .concept-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 191, 255, 0.2);
+        }
+
+        .concept-item i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .concept-item h3 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        /* Objectives Section */
+        .objectives {
+            background: var(--gradient-1);
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .objective-card {
+            background: rgba(0, 80, 168, 0.3);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 15px 15px 0;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .objective-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .objective-card:hover::before {
+            opacity: 1;
+        }
+
+        .objective-card:hover {
+            transform: translateX(10px);
+        }
+
+        .objective-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 191, 255, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .objective-icon i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .objective-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .objective-card p {
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Features Section */
+        .features {
+            background: linear-gradient(180deg, rgba(0, 80, 168, 0.1) 0%, transparent 100%);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 6rem;
+        }
+
+        .feature-row:nth-child(even) {
+            direction: rtl;
+        }
+
+        .feature-row:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .feature-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .feature-content h3 i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-gray);
+            font-size: 1.05rem;
+        }
+
+        .feature-list li i {
+            color: var(--accent);
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .feature-visual {
+            background: rgba(0, 31, 63, 0.8);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+        }
+
+        .dashboard-mock {
+            background: var(--dark-navy);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .mock-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mock-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .mock-dot:nth-child(1) { background: #ff5f57; }
+        .mock-dot:nth-child(2) { background: #febc2e; }
+        .mock-dot:nth-child(3) { background: #28c840; }
+
+        .mock-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .mock-stat {
+            background: var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .mock-stat .number {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .mock-stat .label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .mock-chart {
+            background: rgba(0, 80, 168, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            height: 100px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+
+        .mock-bar {
+            width: 30px;
+            background: linear-gradient(180deg, var(--accent), var(--primary));
+            border-radius: 4px 4px 0 0;
+            animation: growBar 2s ease-out forwards;
+        }
+
+        @keyframes growBar {
+            from { height: 0; }
+        }
+
+        /* AI Section */
+        .ai-section {
+            background: var(--dark-navy);
+            position: relative;
+        }
+
+        .ai-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 50%, rgba(0, 191, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 50%, rgba(0, 80, 168, 0.1) 0%, transparent 40%);
+            z-index: 0;
+        }
+
+        .ai-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .ai-card {
+            background: linear-gradient(135deg, rgba(0, 80, 168, 0.2) 0%, rgba(0, 31, 63, 0.8) 100%);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .ai-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ai-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--accent);
+            box-shadow: 0 30px 60px rgba(0, 191, 255, 0.2);
+        }
+
+        .ai-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .ai-card:hover .ai-icon {
+            background: var(--accent);
+        }
+
+        .ai-icon i {
+            font-size: 2rem;
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .ai-card:hover .ai-icon i {
+            color: var(--dark-navy);
+        }
+
+        .ai-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-card ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .ai-card ul li {
+            color: var(--text-gray);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        .ai-card ul li:last-child {
+            border-bottom: none;
+        }
+
+        .ai-card ul li::before {
+            content: '→';
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        /* Security Section */
+        .security {
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 80, 168, 0.15) 100%);
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .security-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 31, 63, 0.6);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 191, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .security-item:hover {
+            border-color: var(--accent);
+            background: rgba(0, 80, 168, 0.2);
+        }
+
+        .security-item i {
+            font-size: 2rem;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .security-item h4 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .security-item p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Developer Section */
+        .developer {
+            background: var(--gradient-1);
+            text-align: center;
+        }
+
+        .developer-card {
+            background: rgba(0, 191, 255, 0.05);
+            border: 2px solid var(--accent);
+            border-radius: 25px;
+            padding: 3rem;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .developer-card::before {
+            content: '"';
+            font-family: Georgia, serif;
+            font-size: 8rem;
+            color: rgba(0, 191, 255, 0.1);
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            line-height: 1;
+        }
+
+        .developer-title {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .developer-name {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .developer-role {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+        }
+
+        .developer-quote {
+            font-style: italic;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--dark-navy);
+            text-align: center;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .company-logo {
+            width: 180px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 20px var(--accent-glow));
+        }
+
+        .company-name {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        .contact-item i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .contact-item a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(0, 191, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-brand {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand span {
+            color: var(--accent);
+        }
+
+        .footer-copyright {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .footer-copyright a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Animations on Scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .feature-row {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .feature-row:nth-child(even) {
+                direction: ltr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(0, 31, 63, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            section {
+                padding: 60px 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-animation"></div>
+    <div class="grid-lines"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo">
+            <img src="logo.png" alt="Jonas Browser High-Tech" id="nav-logo-img">
+            <span class="nav-brand">Pub&<span>Connecté</span></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#concept">Concept</a></li>
+            <li><a href="#objectifs">Objectifs</a></li>
+            <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+            <li><a href="#ia">Intelligence IA</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">Découvrir</a>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="logo.png" alt="Pub&Connecté" class="hero-logo" id="hero-logo-img">
+            <div class="hero-badge">
+                <i class="fas fa-rocket"></i> Première mondiale
+            </div>
+            <h1>Pub&Connecté</h1>
+            <p class="hero-tagline">La régie publicitaire connectée, pilotée à distance</p>
+            <p class="hero-description">
+                La première plateforme au monde dédiée à la gestion unifiée, à distance et en temps réel 
+                des publicités physiques et digitales. Pilotez l'ensemble de vos supports connectés 
+                depuis une interface unique.
+            </p>
+            <div class="hero-buttons">
+                <a href="#concept" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Découvrir le concept
+                </a>
+                <a href="#contact" class="btn btn-secondary">
+                    <i class="fas fa-envelope"></i> Nous contacter
+                </a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Concept Section -->
+    <section class="concept" id="concept">
+        <div class="section-header reveal">
+            <h2>Le Concept</h2>
+            <p>Une révolution dans la gestion publicitaire connectée</p>
+        </div>
+        
+        <div class="concept-card reveal">
+            <p>
+                <strong>Pub&Connecté</strong> permet de piloter des supports publicitaires connectés 
+                (chevalets digitaux, panneaux LED, écrans vitrines, totems interactifs) et des campagnes 
+                multicanales (SMS, WhatsApp, Messenger, visuels vitrines) à partir d'une seule interface web.
+            </p>
+        </div>
+
+        <div class="concept-grid reveal">
+            <div class="concept-item">
+                <i class="fas fa-desktop"></i>
+                <h3>Chevalets Digitaux</h3>
+            </div>
+            <div class="concept-item">
+                <i class="fas fa-tv"></i>
+                <h3>Panneaux LED</h3>
+            </div>
+            <div class="concept-item">
+                <i class="fas fa-store"></i>
+                <h3>Écrans Vitrines</h3>
+            </div>
+            <div class="concept-item">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>SMS / WhatsApp / Messenger</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Objectives Section -->
+    <section class="objectives" id="objectifs">
+        <div class="section-header reveal">
+            <h2>Objectifs Stratégiques</h2>
+            <p>Une vision ambitieuse pour transformer la publicité</p>
+        </div>
+
+        <div class="objectives-grid reveal">
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3>Centralisation</h3>
+                <p>Créer une plateforme centralisée pour gérer tous les supports publicitaires connectés d'un réseau (magasins, agences, restaurants, hôtels, événements).</p>
+            </div>
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Temps Réel</h3>
+                <p>Permettre la programmation et la diffusion de contenus publicitaires à distance, en temps réel ou planifiés selon vos besoins.</p>
+            </div>
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h3>Unification</h3>
+                <p>Unifier la gestion des campagnes visuelles et des campagnes de messaging (SMS, WhatsApp, Messenger) dans un même tableau de bord.</p>
+            </div>
+            <div class="objective-card">
+                <div class="objective-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>Intelligence Artificielle</h3>
+                <p>Offrir une solution unique au monde, clé en main, basée sur l'IA pour gagner du temps, optimiser l'impact et réduire les erreurs humaines.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="fonctionnalites">
+        <div class="section-header reveal">
+            <h2>Fonctionnalités</h2>
+            <p>Une plateforme complète pour tous vos besoins</p>
+        </div>
+
+        <div class="features-container">
+            <!-- Device Management -->
+            <div class="feature-row reveal">
+                <div class="feature-content">
+                    <h3><i class="fas fa-server"></i> Gestion des Supports Connectés</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Enregistrement et suivi des dispositifs : chevalets connectés, écrans LED, panneaux urbains, écrans vitrines, bornes tactiles</li>
+                        <li><i class="fas fa-check"></i> Contrôle à distance : allumer/éteindre, changer de visuel, régler la luminosité, adapter le message</li>
+                        <li><i class="fas fa-check"></i> Cartographie en temps réel des emplacements avec vue carte et liste</li>
+                        <li><i class="fas fa-check"></i> Alertes de statut : en ligne, hors ligne, anomalies de diffusion</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="dashboard-mock">
+                        <div class="mock-header">
+                            <div class="mock-dot"></div>
+                            <div class="mock-dot"></div>
+                            <div class="mock-dot"></div>
+                        </div>
+                        <div class="mock-stats">
+                            <div class="mock-stat">
+                                <div class="number">127</div>
+                                <div class="label">Supports actifs</div>
+                            </div>
+                            <div class="mock-stat">
+                                <div class="number">98%</div>
+                                <div class="label">En ligne</div>
+                            </div>
+                            <div class="mock-stat">
+                                <div class="number">24/7</div>
+                                <div class="label">Monitoring</div>
+                            </div>
+                        </div>
+                        <div class="mock-chart">
+                            <div class="mock-bar" style="height: 40%;"></div>
+                            <div class="mock-bar" style="height: 60%;"></div>
+                            <div class="mock-bar" style="height: 80%;"></div>
+                            <div class="mock-bar" style="height: 55%;"></div>
+                            <div class="mock-bar" style="height: 90%;"></div>
+                            <div class="mock-bar" style="height: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaign Management -->
+            <div class="feature-row reveal">
+                <div class="feature-content">
+                    <h3><i class="fas fa-bullseye"></i> Campagnes Marketing Multicanales</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Création, import et planification de contenus visuels (images, vidéos, animations)</li>
+                        <li><i class="fas fa-check"></i> Calendrier de diffusion avec gestion d'horaires et jours spéciaux</li>
+                        <li><i class="fas fa-check"></i> Campagnes SMS, WhatsApp Business et Messenger personnalisées</li>
+                        <li><i class="fas fa-check"></i> Segmentation d'audience avancée et templates prêts à l'emploi</li>
+                        <li><i class="fas fa-check"></i> Suivi des taux d'ouverture, clics et désabonnements</li>
+                    </ul>
+                </div>
+                <div class="feature-visual">
+                    <div class="dashboard-mock">
+                        <div class="mock-header">
+                            <div class="mock-dot"></div>
+                            <div class="mock-dot"></div>
+                            <div class="mock-dot"></div>
+                        </div>
+                        <div class="mock-stats">
+                            <div class="mock-stat">
+                                <div class="number">15K</div>
+                                <div class="label">Messages envoyés</div>
+                            </div>
+                            <div class="mock-stat">
+                                <div class="number">72%</div>
+                                <div class="label">Taux d'ouverture</div>
+                            </div>
+                            <div class="mock-stat">
+                                <div class="number">+45%</div>
+                                <div class="label">Engagement</div>
+                            </div>
+                        </div>
+                        <div class="mock-chart">
+                            <div class="mock-bar" style="height: 50%;"></div>
+                            <div class="mock-bar" style="height: 65%;"></div>
+                            <div class="mock-bar" style="height: 75%;"></div>
+                            <div class="mock-bar" style="height: 85%;"></div>
+                            <div class="mock-bar" style="height: 95%;"></div>
+                            <div class="mock-bar" style="height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Section -->
+    <section class="ai-section" id="ia">
+        <div class="section-header reveal">
+            <h2>Puissance de l'IA</h2>
+            <p>L'intelligence artificielle au service de votre communication</p>
+        </div>
+
+        <div class="ai-container">
+            <div class="ai-grid reveal">
+                <div class="ai-card">
+                    <div class="ai-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Content Intelligence</h3>
+                    <ul>
+                        <li>Recommandation automatique de visuels</li>
+                        <li>Génération de textes publicitaires optimisés</li>
+                        <li>Adaptation automatique des formats</li>
+                        <li>Versions jour/nuit intelligentes</li>
+                    </ul>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytique Avancée</h3>
+                    <ul>
+                        <li>Tableau de bord de performances</li>
+                        <li>Scores d'impact publicitaire</li>
+                        <li>Suggestions d'optimisation IA</li>
+                        <li>Rapports automatiques hebdomadaires</li>
+                    </ul>
+                </div>
+                <div class="ai-card">
+                    <div class="ai-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Automatisations</h3>
+                    <ul>
+                        <li>Scénarios QR code → WhatsApp</li>
+                        <li>Relances SMS automatiques</li>
+                        <li>A/B testing automatisé</li>
+                        <li>Assistant conversationnel intégré</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="security">
+        <div class="section-header reveal">
+            <h2>Sécurité & Conformité</h2>
+            <p>Une plateforme sécurisée et conforme aux normes</p>
+        </div>
+
+        <div class="security-grid reveal">
+            <div class="security-item">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <h4>Authentification 2FA</h4>
+                    <p>Double authentification sécurisée pour tous les accès</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-user-lock"></i>
+                <div>
+                    <h4>Gestion des Rôles</h4>
+                    <p>Permissions personnalisées : admin, marketer, opérateur</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-history"></i>
+                <div>
+                    <h4>Traçabilité Complète</h4>
+                    <p>Historique de toutes les modifications et diffusions</p>
+                </div>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-gavel"></i>
+                <div>
+                    <h4>Conformité RGPD</h4>
+                    <p>Respect total des réglementations européennes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer Section -->
+    <section class="developer">
+        <div class="section-header reveal">
+            <h2>Le Développeur</h2>
+            <p>Un concept innovant porté par l'expertise IA</p>
+        </div>
+
+        <div class="developer-card reveal">
+            <div class="developer-title">POV Développé par</div>
+            <div class="developer-name">Gautier Hayet</div>
+            <div class="developer-role">Ingénieur en Intelligence Artificielle</div>
+            <p class="developer-quote">
+                "Pub&Connecté représente la convergence entre l'innovation technologique et les besoins 
+                réels des annonceurs. Notre mission est de simplifier et d'optimiser la gestion publicitaire 
+                grâce à l'intelligence artificielle."
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-header reveal">
+            <h2>Contact</h2>
+            <p>Rejoignez la révolution publicitaire</p>
+        </div>
+
+        <div class="contact-container reveal">
+            <img src="logo.png" alt="Jonas Browser High-Tech" class="company-logo" id="contact-logo-img">
+            <div class="company-name">SARL Jonas Browser High-Tech</div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>108 BVD Robert Schuman, 44300 Nantes, France</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <a href="tel:+33652573779">06 52 57 37 79</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:jonas-browser@outlook.fr">jonas-browser@outlook.fr</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">Pub&<span>Connecté</span></div>
+            <p class="footer-copyright">
+                © 2026 <a href="#">SARL Jonas Browser High-Tech</a> - Tous droits réservés<br>
+                Concept et plateforme Pub&Connecté développés par Gautier Hayet, Ingénieur en IA
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Reveal on scroll
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', reveal);
+        reveal(); // Initial check
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.querySelector('.nav-links').classList.remove('active');
+                }
+            });
+        });
+
+        // Animate bars on scroll
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.mock-bar');
+                    bars.forEach((bar, index) => {
+                        bar.style.animationDelay = `${index * 0.1}s`;
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.mock-chart').forEach(chart => {
+            observer.observe(chart);
+        });
+    </script>
+</body>
+</html>
